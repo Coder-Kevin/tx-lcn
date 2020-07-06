@@ -55,13 +55,19 @@ public class NettyRpcServerChannelInitializer extends ChannelInitializer<Channel
 
     @Override
     protected void initChannel(Channel ch) throws Exception {
+        /*
+         * 需要和客户端订立 相关通信协议底层规则 - 【消息长度(4 : short表示 4个字节)】【消息内容】
+         * lengthFieldLength => 是整数 - 占四个字节 所以同时偏移四个字节 => (0, 4, 0, 4)
+         * */
         ch.pipeline().addLast(new LengthFieldPrepender(4, false));
         ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
 
+        // 空闲状态检查
         ch.pipeline().addLast(new IdleStateHandler(managerProperties.getCheckTime(),
                 managerProperties.getCheckTime(), managerProperties.getCheckTime(), TimeUnit.MILLISECONDS));
 
 
+        // 序列化对象编解码
         ch.pipeline().addLast(new ObjectSerializerEncoder());
         ch.pipeline().addLast(new ObjectSerializerDecoder());
 

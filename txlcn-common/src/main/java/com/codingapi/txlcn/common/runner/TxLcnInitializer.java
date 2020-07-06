@@ -21,6 +21,9 @@ package com.codingapi.txlcn.common.runner;
  * Date: 2019/1/16
  *
  * @author codingapi meetzy
+ *
+ * LCN初始化器   Spring启动的时候从ApplicationContext获取   然后for循环调用初始化方法
+ *
  */
 public interface TxLcnInitializer {
     
